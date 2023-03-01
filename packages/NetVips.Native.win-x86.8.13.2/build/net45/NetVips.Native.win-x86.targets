@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <LibvipsOutputBase Condition="'$(LibvipsOutputBase)' == ''"></LibvipsOutputBase>
+        <!-- EnsureTrailingSlash is only available since VS 2017 -->
+        <LibvipsOutputBase Condition="'$(LibvipsOutputBase)' != '' AND !HasTrailingSlash('$(LibvipsOutputBase)')">$(LibvipsOutputBase)\</LibvipsOutputBase>
+    </PropertyGroup>
+
+    <!-- This copy step is only necessary when our platform is x86 and if we are not building with .NET Core -->
+    <ItemGroup Condition="'$(MSBuildRuntimeType)' != 'Core' AND ('$(Platform)' == 'x86' OR '$(Platform)|$(Prefer32Bit)' == 'AnyCPU|true')">
+        <None Include="$(MSBuildThisFileDirectory)..\..\runtimes\win-x86\native\*">
+            <Link>$(LibvipsOutputBase)%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>
